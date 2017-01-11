@@ -48,3 +48,40 @@ notif.onclick = function () {
   ipcRenderer.send('focusWindow', 'mainWindow')
 }
 })
+
+
+
+//Read JSON data -- temp database
+var fs = require('fs')
+var exists = fs.existsSync('eventlog.json')
+var parsed_event
+if(exists){
+  //Read the file
+  console.log('Loding data')
+  var element = fs.readFileSync('eventlog.json','utf8')
+  parsed_event = JSON.parse(element)
+  console.log(parsed_event)
+}else{
+  console.log('No events')
+  parsed_event={}
+}
+
+
+
+var event_element = 'Second Event' // for testing purposes
+const logBtn = document.getElementById('eventlog')
+//Write JSON data -- temp database
+logBtn.addEventListener('click',function(event){
+  var d = new Date();
+  var n = d.toJSON();
+  var date = n
+  var event_name = event_element
+  parsed_event[date] = event_name
+  var json = JSON.stringify(parsed_event, null, 2)
+  fs.writeFile('eventlog.json', json, 'utf8', finished)
+  function finished(err) {
+    console.log('Finished writing additional.json');
+    // Don't send anything back until everything is done
+  }
+  console.log("new event is logged")
+})

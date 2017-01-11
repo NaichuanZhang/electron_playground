@@ -11,5 +11,9 @@
   "license": "CC0-1.0",
   "devDependencies": {
     "electron": "^1.4.1"
+  },
+  "dependencies": {
+    "fs": "0.0.1-security",
+    "ipc": "0.0.1"
   }
 }
