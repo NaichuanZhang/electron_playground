@@ -1,0 +1,15 @@
+{
+  "name": "DeepWork",
+  "version": "1.0.0",
+  "description": "An Electron App to Plan and Monitor Deep Work",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": "https://github.com/NaichuanZhang/electron_playground",
+  "author": "Naichuan Zhang",
+  "license": "CC0-1.0",
+  "devDependencies": {
+    "electron": "^1.4.1"
+  }
+}
