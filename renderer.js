@@ -55,12 +55,14 @@ notif.onclick = function () {
 var fs = require('fs')
 var exists = fs.existsSync('eventlog.json')
 var parsed_event
+
 if(exists){
   //Read the file
   console.log('Loding data')
   var element = fs.readFileSync('eventlog.json','utf8')
   parsed_event = JSON.parse(element)
   console.log(parsed_event)
+  document.getElementById('event_showcase').innerHTML = element // render the data in the html div
 }else{
   console.log('No events')
   parsed_event={}
@@ -68,7 +70,7 @@ if(exists){
 
 
 
-var event_element = 'Second Event' // for testing purposes
+var event_element = 'Second Event' // for testing purposes  --TODO use document.getElementbyId to get event information.
 const logBtn = document.getElementById('eventlog')
 //Write JSON data -- temp database
 logBtn.addEventListener('click',function(event){
@@ -82,6 +84,10 @@ logBtn.addEventListener('click',function(event){
   function finished(err) {
     console.log('Finished writing additional.json');
     // Don't send anything back until everything is done
+    var notif = new window.Notification('Event Logger',
+    {
+      body: "System has logged this event!"
+    })
   }
   console.log("new event is logged")
 })
