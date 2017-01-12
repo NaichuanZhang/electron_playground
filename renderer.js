@@ -55,18 +55,20 @@ notif.onclick = function () {
 var fs = require('fs')
 var exists = fs.existsSync('eventlog.json')
 var parsed_event
+setInterval(function () {
+  if(exists){
+    //Read the file
+    console.log('Loding data')
+    var element = fs.readFileSync('eventlog.json','utf8')
+    parsed_event = JSON.parse(element)
+    console.log(parsed_event)
+    document.getElementById('event_showcase').innerHTML = element // render the data in the html div
+  }else{
+    console.log('No events')
+    parsed_event={}
+  }
+}, 1000);
 
-if(exists){
-  //Read the file
-  console.log('Loding data')
-  var element = fs.readFileSync('eventlog.json','utf8')
-  parsed_event = JSON.parse(element)
-  console.log(parsed_event)
-  document.getElementById('event_showcase').innerHTML = element // render the data in the html div
-}else{
-  console.log('No events')
-  parsed_event={}
-}
 
 
 

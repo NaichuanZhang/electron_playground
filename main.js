@@ -16,10 +16,11 @@ console.log(Menu)
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
+let pop_up
 
 function createWindow () {
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 800, height: 600})
+  mainWindow = new BrowserWindow({width: 400, height: 600})
 
   // and load the index.html of the app.
   mainWindow.loadURL(url.format({
@@ -67,6 +68,27 @@ app.on('activate', function () {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 
+function quick_add(){
+  pop_up = new BrowserWindow({width: 300, height: 62})
+  pop_up.loadURL(url.format({
+    pathname: path.join(__dirname, 'quick_add.html'),
+    protocol: 'file:',
+    slashes: true
+  }))
+  mainWindow.webContents.openDevTools()
+
+  pop_up.on('closed', function () {
+    // Dereference the window object, usually you would store windows
+    // in an array if your app supports multi windows, this is the time
+    // when you should delete the corresponding element.
+    pop_up = null
+  })
+
+}
+
+
+
+
 //set the icon to be used in both dark and light mode
 const nativeImage = require('electron').nativeImage;
 const iconName ='icons/icon.ico_16x16.png'
@@ -76,6 +98,7 @@ image.setTemplateImage(true);
 console.log(image)
 let appIcon = null
 
+
 ipc.on('put-in-tray', function (event) {
   const iconName ='icons/icon.ico_16x16.png'
 
@@ -84,7 +107,9 @@ ipc.on('put-in-tray', function (event) {
   appIcon = new Tray(image)
   const contextMenu = Menu.buildFromTemplate([
     {label: 'Start Deep Work Session',
-    },
+    click: function (){
+      quick_add()
+    }},
     {label: 'Stop',
     click: function () {
       event.sender.send('tray-removed')
