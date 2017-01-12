@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Add Event</title>
+  </head>
+  <body>
+    <div>
+      <input type="text" name="event_element" placeholder='Current Focus' id ='event_input'>
+      <button class="demo-button" id= 'eventlog'>Log Event</button>
+    </div>
+  </body>
+  <script>
+    var fs = require('fs')
+    var exists = fs.existsSync('eventlog.json')
+    if(exists){
+      //Read the file
+      console.log('Loding data')
+      var element = fs.readFileSync('eventlog.json','utf8')
+      parsed_event = JSON.parse(element)
+      console.log(parsed_event)
+    }else{
+      console.log('No events')
+      parsed_event={}
+    }
+
+    const log = document.getElementById('eventlog')
+    //Write JSON data -- temp database
+    log.addEventListener('click',function(event){
+      var event_element = document.getElementById('event_input').value
+      console.log(event_element)
+      var d = new Date();
+      var n = d.toJSON();
+      var date = n
+      var event_name = event_element
+      parsed_event[date] = event_name
+      var json = JSON.stringify(parsed_event, null, 2)
+      fs.writeFile('eventlog.json', json, 'utf8', finished)
+      function finished(err) {
+        console.log('Finished writing additional.json');
+        // Don't send anything back until everything is done
+        var notif = new window.Notification('Event Logger',
+        {
+          body: "System has logged this event!"
+        })
+      }
+      console.log("new event is logged")
+      setTimeout(function () {
+        window.close()
+      }, 100);
+    })
+  </script>
+</html>
+
+
+<style>
+html {
+  text-align: center;
+}
+</style>

@@ -12,6 +12,8 @@ const Menu = electron.Menu
 const Tray = electron.Tray
 
 
+
+
 console.log(Menu)
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -20,7 +22,7 @@ let pop_up
 
 function createWindow () {
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 400, height: 600})
+  mainWindow = new BrowserWindow({width: 387, height: 653})
 
   // and load the index.html of the app.
   mainWindow.loadURL(url.format({
@@ -98,7 +100,7 @@ image.setTemplateImage(true);
 console.log(image)
 let appIcon = null
 
-
+//tray icon and the menu for tray.
 ipc.on('put-in-tray', function (event) {
   const iconName ='icons/icon.ico_16x16.png'
 
