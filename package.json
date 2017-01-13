@@ -18,6 +18,7 @@
     "chart.js": "^2.4.0",
     "electron-packager": "^8.5.0",
     "fs": "0.0.1-security",
-    "ipc": "0.0.1"
+    "ipc": "0.0.1",
+    "jquery": "^3.1.1"
   }
 }

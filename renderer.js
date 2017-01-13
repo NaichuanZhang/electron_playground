@@ -1,6 +1,7 @@
 // This file is required by the index.html file and will
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
+window.$ = window.jQuery = require('jquery');
 const Chart = require('chart.js')
 var ctx = document.getElementById("myChart");
 var myChart = new Chart(ctx, {
@@ -96,13 +97,16 @@ var fs = require('fs')
 var exists = fs.existsSync('eventlog.json')
 var parsed_event
 setInterval(function () {
+  exists = fs.existsSync('eventlog.json')
   if(exists){
     //Read the file
     console.log('Loding data')
     var element = fs.readFileSync('eventlog.json','utf8')
+    console.log(element)
     parsed_event = JSON.parse(element)
+    var pretty_json = JSON.stringify(parsed_event, null, 2)
     console.log(parsed_event)
-    document.getElementById('event_showcase').innerHTML = element // render the data in the html div
+    document.getElementById('event_showcase').innerHTML = (pretty_json.replace(/"|{|}/g,"")).replace(/,/g, "<br>")// render the data in the html div
   }else{
     console.log('No events')
     parsed_event={}
@@ -112,24 +116,20 @@ setInterval(function () {
 
 
 
-var event_element = 'Second Event' // for testing purposes  --TODO use document.getElementbyId to get event information.
 const logBtn = document.getElementById('eventlog')
 //Write JSON data -- temp database
 logBtn.addEventListener('click',function(event){
-  var d = new Date();
-  var n = d.toJSON();
-  var date = n
-  var event_name = event_element
-  parsed_event[date] = event_name
-  var json = JSON.stringify(parsed_event, null, 2)
-  fs.writeFile('eventlog.json', json, 'utf8', finished)
-  function finished(err) {
-    console.log('Finished writing additional.json');
-    // Don't send anything back until everything is done
-    var notif = new window.Notification('Event Logger',
-    {
-      body: "System has logged this event!"
-    })
-  }
-  console.log("new event is logged")
+    if(exists){
+      //Read the file
+      console.log('Loding data')
+      var element = fs.readFileSync('eventlog.json','utf8')
+      parsed_event = JSON.parse(element)
+      var pretty_json = JSON.stringify(parsed_event, null, 2)
+      console.log(parsed_event)
+      document.getElementById('event_showcase').innerHTML = pretty_json// render the data in the html div
+      alert(pretty_json.replace(/"|{|}/g,""))
+    }else{
+      console.log('No events')
+      parsed_event={}
+    }
 })
