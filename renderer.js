@@ -2,14 +2,18 @@
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
 window.$ = window.jQuery = require('jquery');
+const electron = require('electron')
+// Module to control application life.
+const app = electron.app
+const path = require('path')
 const Chart = require('chart.js')
 var ctx = document.getElementById("myChart");
 var fs = require('fs')
-var exists = fs.existsSync('eventlog.json')
 var parsed_event
 var parsed_array=[]
 var parsed_array_item=[]
-
+var pathname = path.join(__dirname, 'eventlog.json')
+var exists = fs.existsSync(pathname)
 
 //notification and tray
 const ipc = require('electron').ipcRenderer
@@ -60,7 +64,7 @@ parsed_array=[]
 parsed_array_item=[]
 if(exists){
   //Read the file
-  var element = fs.readFileSync('eventlog.json','utf8')
+  var element = fs.readFileSync(pathname,'utf8')
   parsed_event = JSON.parse(element)
   //console.log(parsed_event)
 }else{
@@ -145,11 +149,11 @@ var myChart = new Chart(ctx, {
 
 
 setInterval(function () {
-  exists = fs.existsSync('eventlog.json')
+  exists = fs.existsSync(pathname)
   if(exists){
     //Read the file
     console.log('Loding data')
-    var element = fs.readFileSync('eventlog.json','utf8')
+    var element = fs.readFileSync(pathname,'utf8')
     //console.log(element)
     parsed_event = JSON.parse(element)
     var pretty_json = JSON.stringify(parsed_event, null, 2)
@@ -172,7 +176,7 @@ logBtn.addEventListener('click',function(event){
     if(exists){
       //Read the file
       console.log('Loding data')
-      var element = fs.readFileSync('eventlog.json','utf8')
+      var element = fs.readFileSync(pathname,'utf8')
       parsed_event = JSON.parse(element)
       var pretty_json = JSON.stringify(parsed_event, null, 2)
       console.log(parsed_event)

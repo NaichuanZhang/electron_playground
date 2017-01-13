@@ -32,7 +32,7 @@ function createWindow () {
   }))
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools()
+  //mainWindow.webContents.openDevTools()
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
@@ -77,7 +77,7 @@ function quick_add(){
     protocol: 'file:',
     slashes: true
   }))
-  mainWindow.webContents.openDevTools()
+  //mainWindow.webContents.openDevTools()
 
   pop_up.on('closed', function () {
     // Dereference the window object, usually you would store windows
