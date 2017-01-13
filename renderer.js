@@ -4,42 +4,10 @@
 window.$ = window.jQuery = require('jquery');
 const Chart = require('chart.js')
 var ctx = document.getElementById("myChart");
-var myChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-        datasets: [{
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
-            ],
-            borderColor: [
-                'rgba(255,99,132,1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 1
-        }]
-    },
-    options: {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero:true
-                }
-            }]
-        }
-    }
-});
+var fs = require('fs')
+var exists = fs.existsSync('eventlog.json')
+var parsed_event
+var parsed_array=[]
 
 
 
@@ -88,30 +56,88 @@ var notif = new window.Notification('Event Logger',
 notif.onclick = function () {
   ipcRenderer.send('focusWindow', 'mainWindow')
 }
+parsed_array=[]
+if(exists){
+  //Read the file
+  var element = fs.readFileSync('eventlog.json','utf8')
+  parsed_event = JSON.parse(element)
+  console.log(parsed_event)
+}else{
+  console.log('No events')
+  parsed_event={}
+}
+for (piece in parsed_event){
+  parsed_array.push(piece)
+}
+console.log(parsed_array)
+var time_array = []
+var count
+for(count = 0; count < parsed_array.length; count++){
+  time_array.push(parsed_array[count])
+  console.log(parsed_array.length)
+}
+console.log("time")
+console.log(time_array)
+// graph the chart
+var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: parsed_array,
+        datasets: [{
+            label: 'time',
+            data: [5, 5, 5, 5, 5, 5],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255,99,132,1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero:true
+                }
+            }]
+        }
+    }
+});
 })
 
 
 
-//Read JSON data -- temp database
-var fs = require('fs')
-var exists = fs.existsSync('eventlog.json')
-var parsed_event
+
 setInterval(function () {
   exists = fs.existsSync('eventlog.json')
   if(exists){
     //Read the file
     console.log('Loding data')
     var element = fs.readFileSync('eventlog.json','utf8')
-    console.log(element)
+    //console.log(element)
     parsed_event = JSON.parse(element)
     var pretty_json = JSON.stringify(parsed_event, null, 2)
-    console.log(parsed_event)
+    //console.log(parsed_event)
     document.getElementById('event_showcase').innerHTML = (pretty_json.replace(/"|{|}/g,"")).replace(/,/g, "<br>")// render the data in the html div
   }else{
     console.log('No events')
     parsed_event={}
   }
 }, 1000);
+
+
 
 
 
