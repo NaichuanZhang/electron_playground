@@ -8,7 +8,7 @@ var fs = require('fs')
 var exists = fs.existsSync('eventlog.json')
 var parsed_event
 var parsed_array=[]
-
+var parsed_array_item=[]
 
 
 //notification and tray
@@ -57,11 +57,12 @@ notif.onclick = function () {
   ipcRenderer.send('focusWindow', 'mainWindow')
 }
 parsed_array=[]
+parsed_array_item=[]
 if(exists){
   //Read the file
   var element = fs.readFileSync('eventlog.json','utf8')
   parsed_event = JSON.parse(element)
-  console.log(parsed_event)
+  //console.log(parsed_event)
 }else{
   console.log('No events')
   parsed_event={}
@@ -69,23 +70,46 @@ if(exists){
 for (piece in parsed_event){
   parsed_array.push(piece)
 }
+var i=0
+var date_count=0
+var time_array=[]
+for(i = 0; i<parsed_array.length;i++){
+  if(i == 0){
+    parsed_array_item.push(1)
+    time_array.push(parsed_array[i].substring(0,10))
+    date_count = 0
+  }else{
+    if(parsed_array[i].substring(0,10) == parsed_array[i-1].substring(0,10)){
+      parsed_array_item[date_count] += 1
+      console.log(parsed_array_item)
+    }else{
+      date_count ++
+      parsed_array_item.push(1)
+      time_array.push(parsed_array[i].substring(0,10))
+    }
+  }
+
+}
+console.log(parsed_array_item)
 console.log(parsed_array)
+/*
 var time_array = []
 var count
 for(count = 0; count < parsed_array.length; count++){
   time_array.push(parsed_array[count])
   console.log(parsed_array.length)
 }
+*/
 console.log("time")
 console.log(time_array)
 // graph the chart
 var myChart = new Chart(ctx, {
     type: 'bar',
     data: {
-        labels: parsed_array,
+        labels: time_array,
         datasets: [{
-            label: 'time',
-            data: [5, 5, 5, 5, 5, 5],
+            label: 'task accomplished',
+            data: parsed_array_item,
             backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(54, 162, 235, 0.2)',
